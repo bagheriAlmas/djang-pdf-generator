@@ -1,0 +1,88 @@
+{% include 'base.html' %}
+
+
+<div class="container w-50">
+    <div class="card mt-4">
+        <div class="card-header">
+            Register
+        </div>
+        <div class="card-body" style="padding: 5% 5% 0 5%">
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Username input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="form2Example1">Username</label>
+                    <input type="text" id="form2Example1" class="form-control" name="username"/>
+                </div>
+
+                <!-- Password inputs -->
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                            <label class="form-label" for="form2Example2">Password</label>
+                            <input type="password" id="form2Example2" class="form-control" name="password1"/>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                            <label class="form-label" for="form2Example2">Confirm Password</label>
+                            <input type="password" id="form2Example2" class="form-control" name="password2"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email & Phone inputs -->
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                            <label class="form-label" for="form2Example1">Email</label>
+                            <input type="email" id="form2Example1" class="form-control" name="email"/>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                            <label class="form-label" for="form2Example1">Phone</label>
+                            <input type="text" id="form2Example1" class="form-control" name="phone"/>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Age & Gender inputs -->
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                            <label class="form-label" for="form2Example1">Age</label>
+                            <input type="number" id="form2Example1" class="form-control" name="age"/>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+
+                            <div class="d-md-flex justify-content-start align-items-center mb-4 py-2">
+                                <div class="form-check form-check-inline mb-0 me-4">
+                                    <input class="form-check-input" type="radio" name="gender"
+                                           id="maleGender"
+                                           value="Male" checked/>
+                                    <label class="form-check-label" for="maleGender">Male</label>
+                                </div>
+                                <div class="form-check form-check-inline mb-0 me-4">
+                                    <input class="form-check-input" type="radio" name="gender"
+                                           id="femaleGender"
+                                           value="Female"/>
+                                    <label class="form-check-label" for="femaleGender">Female</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary btn-block mb-4 w-100">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
