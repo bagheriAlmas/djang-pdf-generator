@@ -1,0 +1,26 @@
+{% include 'base.html' %}
+<div class="container w-75">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Time</th>
+            <th scope="col">Date</th>
+            <th scope="col">Download</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for report in reports %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ report.created_at.time }}</td>
+                <td>{{ report.created_at }}</td>
+                <td><a class="btn btn-secondary" href="{{ report.file }}">Link</a></td>
+
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+</div>
