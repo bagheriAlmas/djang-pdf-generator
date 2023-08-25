@@ -1,15 +1,26 @@
 {% include 'base.html' %}
+<style>
+    .custom-div {
+        background-color: white;
+        transition: background-color 0.25s;
+        border-radius: 5px;
+    }
 
-<div class="container-fluid">
+    .gray {
+        background-color: gray;
+    }
+</style>
+
+<div class="container-fluid" style="padding: 2% 5% 2% 5%">
     <div class="row">
         {% for note in notes %}
-            <div class="col-lg-4 col-md-6 col-sm-12 p-1">
+            <div class="col-lg-4 col-md-6 col-sm-12 p-1 custom-div" onmouseenter="changeColor(this)" onmouseleave="changeColor(this)" onclick="window.location= '{% url "note_detail" note.id %}'">
                 <div class="card">
                     <div style="display: flex; flex: 1 1 auto;align-items: center ">
                         <div style="width: 64px; height: 64px; justify-content: center"
                              class="img-square-wrapper d-flex align-items-center">
                             <img style="max-width: 64px; max-height: 64px" src="{{ note.thumbnail.url }}"
-                                 alt="{{ note.title }}">
+                                 alt="{{ note.title }} ">
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">{{ note.title }}</h5>
@@ -18,9 +29,16 @@
                     </div>
                     <div class="card-footer">
                         <small class="text-muted">Last updated {{ note.updated_at | timesince }} ago</small>
+
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
 </div>
+
+<script>
+        function changeColor(element) {
+            element.classList.toggle('gray');
+        }
+    </script>
