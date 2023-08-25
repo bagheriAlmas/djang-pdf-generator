@@ -1,5 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Note
@@ -10,11 +9,17 @@ class NoteListView(LoginRequiredMixin, ListView):
     template_name = 'home.html'
     context_object_name = 'notes'
 
+    def get_queryset(self):
+        return Note.objects.filter(author=self.request.user)
+
 
 class NoteDetailView(LoginRequiredMixin, DetailView):
     model = Note
     template_name = 'notes/note.html'
     context_object_name = 'note'
+
+    def get_queryset(self):
+        return Note.objects.filter(author=self.request.user)
 
 
 class NoteCreateView(LoginRequiredMixin, CreateView):
@@ -28,7 +33,7 @@ class NoteCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class NoteUpdateView(LoginRequiredMixin, UpdateView):
+class NoteUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Note
     template_name = 'notes/update_note.html'
     fields = ['title', 'body', 'thumbnail']
@@ -44,8 +49,14 @@ class NoteUpdateView(LoginRequiredMixin, UpdateView):
 
         return super().form_valid(form)
 
+    def test_func(self):
+        return self.get_object().author == self.request.user
 
-class NoteDeleteView(LoginRequiredMixin, DeleteView):
+
+class NoteDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Note
     template_name = 'notes/delete_note.html'
     success_url = reverse_lazy('note_list')
+
+    def test_func(self):
+        return self.get_object().author == self.request.user
