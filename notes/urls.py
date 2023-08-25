@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import NoteListView, NoteDetailView, NoteCreateView, NoteUpdateView, NoteDeleteView
+from .views import (NoteListView, NoteDetailView, NoteCreateView, NoteUpdateView, NoteDeleteView, PDFRenderView,
+                    PDFReportListView)
 
 urlpatterns = [
     path('', NoteListView.as_view(), name='note_list'),
@@ -7,5 +8,8 @@ urlpatterns = [
     path('note/create/', NoteCreateView.as_view(), name='note_create'),
     path('note/<int:pk>/update/', NoteUpdateView.as_view(), name='note_update'),
     path('note/<int:pk>/delete/', NoteDeleteView.as_view(), name='note_delete'),
+    path('pdf/', PDFRenderView.as_view(), name='test-view'),
+    path('pdf/reports/', PDFReportListView.as_view(), name='pdf_reports_list'),
+
 
 ]
