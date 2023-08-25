@@ -1,7 +1,59 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Note
+from django.template.loader import get_template
+from django.shortcuts import render
+from django.conf import settings
+import os.path
+from xhtml2pdf import pisa
+from datetime import datetime
+from .models import Note, Report
+
+
+class PDFRenderView(ListView):
+    model = Note
+    template_name = 'reports/pdf_template.html'
+    context_object_name = 'notes'
+
+    def render_to_response(self, context, **response_kwargs):
+
+        template = get_template(self.template_name)
+        html = template.render(context)
+
+        user = self.request.user
+        if user.is_authenticated:
+            username = user.username
+        else:
+            username = 'anonymous'
+
+        file_directory = os.path.join(settings.MEDIA_ROOT, 'reports')
+        os.makedirs(file_directory, exist_ok=True)
+
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        pdf_filename = f'report_{username}_{timestamp}.pdf'
+        pdf_file_path = os.path.join(file_directory, pdf_filename)
+
+        with open(pdf_file_path, 'wb') as pdf_file:
+            pisa_status = pisa.CreatePDF(html, dest=pdf_file)
+            if pisa_status.err:
+                return render(self.request, 'reports/pdf_message.html', {'message': 'PDF creation error'})
+
+        pdf_url = os.path.join(settings.MEDIA_URL, 'reports', pdf_filename)
+
+        Report.objects.create(
+            author=user,
+            file=pdf_url
+        )
+        return render(self.request, 'reports/pdf_message.html', {'message': 'Your request is being processed'})
+
+
+class PDFReportListView(LoginRequiredMixin, ListView):
+    model = Report
+    template_name = 'reports/pdf_report_list.html'
+    context_object_name = 'reports'
+
+    def get_queryset(self):
+        return Report.objects.filter(author=self.request.user)
 
 
 class NoteListView(LoginRequiredMixin, ListView):
