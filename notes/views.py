@@ -35,6 +35,12 @@ class NoteUpdateView(UpdateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+
+        instance = form.save(commit=False)
+        uploaded_image = form.cleaned_data['thumbnail']
+        instance.thumbnail = uploaded_image
+        instance.save()
+
         return super().form_valid(form)
 
 
