@@ -1,5 +1,30 @@
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">delete</button>
-</form>
+{% include 'base.html' %}
+
+<div class="container w-50">
+    <div class="card mt-4">
+        <div class="card-header">
+            Delete [ {{ object.title | truncatewords:5 }} ]
+        </div>
+        <div class="card-body" style="padding: 2% 5% 0 5%">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- Title input -->
+                <div class="form-outline mb-4">
+                    <img class="img-thumbnail" style="max-width: 72px; max-height: 72px" src="{{ object.thumbnail.url }}" alt="{{ object.title }}">
+                    <label class="form-label" for="id_title">Are you sure you want to delete <b>{{ object.title }}</b> ?</label>
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-danger btn-block mb-4 w-100">Delete</button>
+
+            </form>
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
