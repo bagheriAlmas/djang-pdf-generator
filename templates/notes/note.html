@@ -1,3 +1,31 @@
-{{ note.title }}
-{{ note.body }}
-{{ note.author.username }}
+{% include 'base.html' %}
+
+<div class="container w-75 p-5">
+    <div class="card">
+        <div style="display: flex; flex: 1 1 auto">
+            <div style="width: 64px; height: 64px; "
+                 class="img-square-wrapper d-flex align-items-center">
+                <img style="max-width: 64px; max-height: 64px; margin: 20% 0 0 20% !important;"
+                     src="{{ note.thumbnail.url }}"
+                     alt="{{ note.title }} ">
+            </div>
+            <div class="card-body">
+                <div class="d-flex w-100">
+                    <div class="card-title d-flex justify-content-start w-50" >
+                        <h5>{{ note.title }}</h5>
+                    </div>
+                    <div class="card-title d-flex justify-content-end w-50" >
+                        <h6 class="justify-content-end">{{ note.created_at|date }}</h6>
+                    </div>
+                </div>
+                <p class="card-text">{{ note.body }}</p>
+            </div>
+        </div>
+        <div class="card-footer">
+            <small class="text-muted">Last updated {{ note.updated_at | timesince }} ago</small>
+            <a style="float: right; margin-left: 10px" class="btn btn-danger btn-sm"
+               href="{% url 'note_delete' note.id %}">Delete</a>
+            <a style="float: right" class="btn btn-warning btn-sm" href="{% url 'note_update' note.id %}">Update</a>
+        </div>
+    </div>
+</div>
