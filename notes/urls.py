@@ -8,8 +8,7 @@ urlpatterns = [
     path('note/create/', NoteCreateView.as_view(), name='note_create'),
     path('note/<int:pk>/update/', NoteUpdateView.as_view(), name='note_update'),
     path('note/<int:pk>/delete/', NoteDeleteView.as_view(), name='note_delete'),
-    path('pdf/', PDFRenderView.as_view(), name='test-view'),
-    path('pdf/reports/', PDFReportListView.as_view(), name='pdf_reports_list'),
-
+    path('pdf/request/', PDFRenderView.as_view(), name='pdf_render'),
+    path('pdf/reports/', PDFReportListView.as_view(), name='pdf_report_list'),
 
 ]
