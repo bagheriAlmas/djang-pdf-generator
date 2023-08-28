@@ -18,6 +18,7 @@ class Note(models.Model):
 class Report(models.Model):
     author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     file = models.FileField(upload_to='reports/')
+    read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
