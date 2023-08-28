@@ -161,3 +161,4 @@ cython_debug/
 .idea/
 **/migrations/
 media/
+celerybeat-schedule.db
