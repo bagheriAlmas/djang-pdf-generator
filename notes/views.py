@@ -5,7 +5,7 @@ from .models import Note, Report
 from .tasks import generate_report_data_for_user
 
 
-class PDFRenderView(TemplateView):
+class PDFRenderView(LoginRequiredMixin, TemplateView):
     template_name = 'reports/pdf_message.html'
 
     def get_context_data(self, **kwargs):
