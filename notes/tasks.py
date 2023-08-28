@@ -2,6 +2,7 @@ import time
 from datetime import datetime
 from notes.models import Report, Note
 from pdf_generator.celery import app
+from celery import shared_task
 from users.models import CustomUser
 from .report_utils import generate_pdf_report
 
@@ -27,3 +28,9 @@ def generate_report_data_for_user(user_id: int):
         author_id=user_id,
         file=pdf_url
     )
+
+
+@shared_task
+def remove_reports():
+    reports_to_delete = Report.objects.filter(read=True)
+    reports_to_delete.delete()
