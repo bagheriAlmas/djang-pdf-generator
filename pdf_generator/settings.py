@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'notes.apps.NotesConfig',
     'bootstrap5',
+    'django_celery_beat',
 
 ]
 
