@@ -16,7 +16,7 @@
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>{{ report.created_at.time }}</td>
                 <td>{{ report.created_at }}</td>
-                <td><a class="btn btn-secondary" href="{{ report.file }}">Link</a></td>
+                <td><a class="btn btn-secondary" href="{{ CDN_DOWNLOAD_URL }}/{{ report.file }}">Link</a></td>
 
             </tr>
         {% endfor %}
