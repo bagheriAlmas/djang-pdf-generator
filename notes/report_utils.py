@@ -2,6 +2,7 @@ import os
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from pdf_generator import settings
+import storage
 
 
 def generate_pdf_report(template_context: dict, template_name: str, file_name: str):
@@ -19,6 +20,5 @@ def generate_pdf_report(template_context: dict, template_name: str, file_name: s
         if pisa_status.err:
             raise Exception(f'PDF creation error - {pisa_status.err}')
 
-    pdf_url = os.path.join(settings.MEDIA_URL, 'reports', pdf_filename)
-
-    return pdf_url
+    storage.save(os.path.join(settings.MEDIA_ROOT, 'reports', pdf_filename), pdf_filename)
+    return str(str(settings.CDN_BASE_URL) + str(pdf_filename))
