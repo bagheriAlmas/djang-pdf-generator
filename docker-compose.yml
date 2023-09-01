@@ -1,0 +1,108 @@
+version: '1'
+services:
+  db:
+    container_name: postgres-container
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+
+  migrate:
+    container_name: migrate-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_PORT: 5432
+    command: bash -c "python manage.py migrate && python manage.py collectstatic --noinput"
+    volumes:
+      - './pdf_generator:/app'
+
+  django:
+    container_name: django-container
+    command: python manage.py runserver 0.0.0.0:8000
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8000:8000
+    environment:
+      DB_HOST: db
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_PORT: 5432
+      CDN_BASE_URL: 'local-storage:8000/'
+    depends_on:
+      - db
+    volumes:
+      - ./media/:/media/
+
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - django
+    environment:
+      DJANGO_SETTINGS_MODULE: 'pdf_generator.settings'
+      CDN_BASE_URL: 'http://local-storage:8000/'
+      REDIS_URL: 'redis://redis:6379/1'
+      DB_HOST: db
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_PORT: 5432
+    command: [ "celery", "-A", "pdf_generator", "worker", "--loglevel=debug" ]
+    volumes:
+      - ./media/:/media/
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - django
+    environment:
+      DJANGO_SETTINGS_MODULE: 'pdf_generator.settings'
+      CDN_BASE_URL: 'http://local-storage:8000/'
+      REDIS_URL: 'redis://redis:6379/1'
+      DB_HOST: db
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_PORT: 5432
+    command: ["celery", "-A", "pdf_generator", "beat", "-s", "/var/celerybeat-schedule"]
+
+  local-storage:
+    build:
+      context: ./storage
+      dockerfile: storage-dockerfile
+    depends_on:
+      - django
+    command: ["python", "-m", "uploadserver"]
+    ports:
+      - 8001:8000
+
+volumes:
+  db_data:
+    driver: local
+  media_volume:
