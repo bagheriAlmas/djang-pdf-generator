@@ -108,9 +108,27 @@ Before you begin, ensure you have met the following requirements:
 
 
 ## Images
-![alt text](http://url/to/img1.png)
-![alt text](http://url/to/img2.png)
-![alt text](http://url/to/img3.png)
-![alt text](http://url/to/img4.png)
-![alt text](http://url/to/img5.png)
-![alt text](http://url/to/img6.png)
+### Notes List
+![alt text](images/img1.png)
+
+### Note Detail
+![alt text](images/img2.png)
+
+### Update Note
+![alt text](images/img3.png)
+
+### Send Request to Generate PDF
+![alt text](images/img4.png)
+
+### Reports List
+![alt text](images/img5.png)
+
+### Change Password Form
+![alt text](images/img6.png)
+
+### Login Form
+![alt text](images/img7.png)
+
+### Register Form
+![alt text](images/img8.png)
+
