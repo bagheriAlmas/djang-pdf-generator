@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from pdf_generator import settings
 from .models import Note, Report
 from .tasks import generate_report_data_for_user
 
@@ -15,16 +16,15 @@ class PDFRenderView(LoginRequiredMixin, TemplateView):
         return context
 
 
-# Function View of PDFRenderView
-# def pdf_render_view(request):
-#     generate_report_data_for_user.delay(request.user.id)
-#     return render(request, 'reports/pdf_message.html', {'message': 'Your request is being processed'})
-#
-
 class PDFReportListView(LoginRequiredMixin, ListView):
     model = Report
     template_name = 'reports/pdf_report_list.html'
     context_object_name = 'reports'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['CDN_DOWNLOAD_URL'] = settings.CDN_DOWNLOAD_URL
+        return context
 
     def get_queryset(self):
         return Report.objects.filter(author=self.request.user)
