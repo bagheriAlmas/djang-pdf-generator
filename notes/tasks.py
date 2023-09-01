@@ -17,7 +17,7 @@ def generate_report_data_for_user(user_id: int):
     }
 
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    file_name = f'{username} - Reports - {timestamp}'
+    file_name = f'{username}-Reports-{timestamp}'
 
     try:
         pdf_url = generate_pdf_report(context, 'reports/pdf_template.html', file_name)
@@ -26,7 +26,7 @@ def generate_report_data_for_user(user_id: int):
 
     Report.objects.create(
         author_id=user_id,
-        file=pdf_url
+        file=file_name + '.pdf'
     )
 
 
