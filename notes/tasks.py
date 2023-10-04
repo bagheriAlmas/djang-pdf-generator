@@ -1,4 +1,5 @@
 import time
+from django.db.models import Q
 from datetime import datetime
 from notes.models import Report, Note
 from pdf_generator.celery import app
@@ -8,9 +9,16 @@ from .report_utils import generate_pdf_report
 
 
 @app.task
-def generate_report_data_for_user(user_id: int):
+def generate_report_data_for_user(user_id: int, start_date, end_date):
+    print(f"start date :{start_date}")
+    print(f"end date :{end_date}")
+
     username = CustomUser.objects.only('username').get(pk=user_id).username
-    notes = Note.objects.filter(author_id=user_id)
+    notes = Note.objects.filter(
+        Q(author_id=user_id) &
+        Q(created_at__gte=start_date) &
+        Q(created_at__lte=end_date)
+    )
     time.sleep(10)
     context = {
         'notes': notes
