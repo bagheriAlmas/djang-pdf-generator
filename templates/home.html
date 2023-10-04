@@ -14,12 +14,14 @@
 <div class="container-fluid" style="padding: 2% 5% 2% 5%">
     <div class="row">
         {% for note in notes %}
-            <div class="col-lg-4 col-md-6 col-sm-12 p-1 custom-div" onmouseenter="changeColor(this)" onmouseleave="changeColor(this)" onclick="window.location= '{% url "note_detail" note.id %}'">
+            <div class="col-lg-4 col-md-6 col-sm-12 p-1 custom-div" onmouseenter="changeColor(this)"
+                 onmouseleave="changeColor(this)" onclick="window.location= '{% url "note_detail" note.id %}'">
                 <div class="card">
                     <div style="display: flex; flex: 1 1 auto;align-items: center ">
                         <div style="width: 64px; height: 64px; justify-content: center"
                              class="img-square-wrapper d-flex align-items-center">
-                            <img class="img-thumbnail" style="max-width: 64px; max-height: 64px; margin-left: 30%" src="{{ note.thumbnail.url }}"
+                            <img class="img-thumbnail" style="max-width: 64px; max-height: 64px; margin-left: 30%"
+                                 src="{{ note.thumbnail.url }}"
                                  alt="{{ note.title }} ">
                         </div>
                         <div class="card-body">
@@ -34,11 +36,41 @@
                 </div>
             </div>
         {% endfor %}
+
+        <div class="container d-flex justify-content-center mt-5">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item">
+                        {% if page.has_previous %}
+                            <a class="page-link" href="?page=1" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        {% else %}
+                        {% endif %}
+                    </li>
+                    {% for i in page.paginator.page_range %}
+                        <li class="page-item{% if i == page.number %} active{% endif %}">
+                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+                    <li class="page-item">
+                        {% if page.has_next %}
+                            <a class="page-link" href="?page={{ page.paginator.num_pages }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        {% else %}
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+
     </div>
 </div>
 
 <script>
-        function changeColor(element) {
-            element.classList.toggle('gray');
-        }
-    </script>
+    function changeColor(element) {
+        element.classList.toggle('gray');
+    }
+</script>
