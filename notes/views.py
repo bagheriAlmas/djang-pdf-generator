@@ -23,7 +23,7 @@ class PDFRenderView(LoginRequiredMixin, TemplateView):
             start_date = form.cleaned_data['start_date']
             end_date = form.cleaned_data['end_date']
 
-            generate_report_data_for_user(request.user.id, start_date, end_date)
+            generate_report_data_for_user.delay(request.user.id, start_date, end_date)
             return render(request, 'reports/pdf_message.html', {})
         else:
             context = self.get_context_data(**kwargs)
