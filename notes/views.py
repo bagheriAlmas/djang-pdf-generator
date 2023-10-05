@@ -2,18 +2,33 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from pdf_generator import settings
+from .forms import EventForm
 from .models import Note, Report
 from .tasks import generate_report_data_for_user
+from django.shortcuts import render
 
 
 class PDFRenderView(LoginRequiredMixin, TemplateView):
-    template_name = 'reports/pdf_message.html'
+    template_name = 'reports/pdf_select_report_period.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        generate_report_data_for_user.delay(self.request.user.id)
+        context['form'] = EventForm()
         context['message'] = 'Your request is being processed'
         return context
+
+    def post(self, request, *args, **kwargs):
+        form = EventForm(request.POST)
+        if form.is_valid():
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
+
+            generate_report_data_for_user(request.user.id, start_date, end_date)
+            return render(request, 'reports/pdf_message.html', {})
+        else:
+            context = self.get_context_data(**kwargs)
+            context['form'] = form
+            return self.render_to_response(context)
 
 
 class PDFReportListView(LoginRequiredMixin, ListView):
@@ -43,6 +58,7 @@ class NoteListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['page'] = context.get('page_obj')
         return context
+
 
 class NoteDetailView(LoginRequiredMixin, DetailView):
     model = Note
