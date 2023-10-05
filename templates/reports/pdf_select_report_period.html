@@ -1,22 +1,52 @@
 {% include 'base.html' %}
 
+<div class="container w-50">
+    <div class="card mt-4">
+        <div class="card-header">
+            Select Date
+        </div>
+        <div class="card-body p-5">
+            <form method="post">
+                {% csrf_token %}
+                <!-- Start Date input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="id_start_date">Start Date</label>
+                    <input type="text" id="id_start_date" class="form-control datepicker1" name="start_date" required/>
+                </div>
 
-    <h2>Create an Event</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Save</button>
-    </form>
-    <script>
-        $(document).ready(function () {
-            $('.datepicker1').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true,
-            });
-            $('.datepicker2').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true,
-            });
+                <!-- End Date input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="id_end_date">End Date</label>
+                    <input type="text" id="id_end_date" class="form-control datepicker2" name="end_date" required/>
+                </div>
 
+
+                <!-- Send Request button -->
+                <button type="submit" class="btn btn-primary btn-block mb-4 w-100">Send Request</button>
+
+
+            </form>
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.datepicker1').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
         });
-    </script>
+        $('.datepicker2').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+        });
+
+    });
+</script>
